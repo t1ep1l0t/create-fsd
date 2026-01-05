@@ -1,0 +1,9 @@
+{
+  "welcome": "Welcome to FSD React App",
+  "home": "Home",
+  "about": "About",
+  "counter": "Counter",
+  "increment": "Increment",
+  "decrement": "Decrement",
+  "reset": "Reset"
+}

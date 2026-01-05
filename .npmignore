@@ -1,0 +1,19 @@
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Dependencies
+node_modules
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test directories
+test-project
+
+# OS
+.DS_Store
+Thumbs.db
