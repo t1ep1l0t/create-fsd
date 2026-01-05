@@ -1,6 +1,6 @@
 {
   "name": "@t1ep1l0t/create-fsd",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "CLI tool to create React projects with FSD architecture",
   "type": "module",
   "bin": {
