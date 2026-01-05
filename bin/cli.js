@@ -13,16 +13,35 @@ const __dirname = path.dirname(__filename);
 
 const program = new Command();
 
+// Helper function to detect if project uses TypeScript
+function isTypeScriptProject() {
+  const tsconfigPath = path.join(process.cwd(), 'tsconfig.json');
+  return fs.existsSync(tsconfigPath);
+}
+
 program
   .name('create-fsd')
-  .description('CLI to create React projects with FSD architecture')
-  .version('2.0.0')
+  .description('CLI for Feature-Sliced Design architecture')
+  .version('3.0.0');
+
+// App creation command
+program
+  .command('app')
+  .description('Create a new project from template')
   .argument('<project-name>', 'name of the project')
   .option('-t, --template <template>', 'template to use', 'react')
+  .option('-ts, --typescript', 'use TypeScript instead of JavaScript', false)
   .action(async (projectName, options) => {
-    const { template } = options;
+    const { template, typescript } = options;
 
-    console.log(chalk.blue.bold(`\n🚀 Creating ${projectName} with ${template} template...\n`));
+    // Determine the actual template to use
+    let actualTemplate = template;
+    if (typescript && template === 'react') {
+      actualTemplate = 'react-ts';
+    }
+
+    const languageLabel = typescript ? 'TypeScript' : 'JavaScript';
+    console.log(chalk.blue.bold(`\n🚀 Creating ${projectName} with ${template} template (${languageLabel})...\n`));
 
     const targetDir = path.join(process.cwd(), projectName);
 
@@ -35,10 +54,10 @@ program
     // Create project directory
     fs.mkdirSync(targetDir, { recursive: true });
 
-    const templateDir = path.join(__dirname, '..', 'templates', template);
+    const templateDir = path.join(__dirname, '..', 'templates', actualTemplate);
 
     if (!fs.existsSync(templateDir)) {
-      console.log(chalk.red(`❌ Template ${template} not found!`));
+      console.log(chalk.red(`❌ Template ${actualTemplate} not found!`));
       process.exit(1);
     }
 
@@ -81,9 +100,9 @@ program
     console.log();
   });
 
-// FSD structure generation command
+// FSD architecture generation command
 program
-  .command('fsd')
+  .command('arch')
   .description('Generate FSD (Feature-Sliced Design) structure')
   .option('-f, --feature <name>', 'create feature in features/')
   .option('-e, --entity <name>', 'create entity in entities/')
@@ -93,6 +112,10 @@ program
   .option('-i, --index', 'create index files in root and all segments', false)
   .action(async (options) => {
     const { feature, entity, widget, page, segments, index } = options;
+
+    // Detect project type
+    const isTS = isTypeScriptProject();
+    const fileExtension = isTS ? 'ts' : 'js';
 
     // Determine layer and name based on which flag was used
     let layer, name, layerType;
@@ -125,6 +148,7 @@ program
     }
 
     console.log(chalk.blue.bold(`\n🏗️  Generating FSD structure...\n`));
+    console.log(chalk.cyan(`Project type: ${isTS ? 'TypeScript' : 'JavaScript'}`));
     console.log(chalk.cyan(`Layer: ${layer}`));
     console.log(chalk.cyan(`${layerType}: ${name}`));
     console.log(chalk.cyan(`Segments: ${segments.join(', ')}`));
@@ -150,7 +174,7 @@ program
 
         // Create index file in segment if requested
         if (index) {
-          const segmentIndexPath = path.join(segmentDir, 'index.js');
+          const segmentIndexPath = path.join(segmentDir, `index.${fileExtension}`);
           fs.writeFileSync(segmentIndexPath, '');
         } else {
           // Create a .gitkeep file to ensure empty directories are tracked
@@ -169,7 +193,7 @@ program
     if (index) {
       const indexSpinner = ora('Creating root index file...').start();
       try {
-        const indexPath = path.join(baseDir, 'index.js');
+        const indexPath = path.join(baseDir, `index.${fileExtension}`);
 
         // If index file exists, read existing exports and merge with new ones
         let existingExports = new Set();
@@ -216,11 +240,11 @@ program
       const prefix = index ? '├──' : (isLast ? '└──' : '├──');
       console.log(chalk.white(`    ${prefix} ${segment}/`));
       if (index) {
-        console.log(chalk.white(`    │   └── index.js`));
+        console.log(chalk.white(`    │   └── index.${fileExtension}`));
       }
     });
     if (index) {
-      console.log(chalk.white(`    └── index.js`));
+      console.log(chalk.white(`    └── index.${fileExtension}`));
     }
     console.log();
   });

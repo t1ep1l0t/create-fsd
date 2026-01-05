@@ -1,6 +1,6 @@
 {
   "name": "@t1ep1l0t/create-fsd",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "CLI for Feature-Sliced Design architecture. Create production-ready projects from framework templates and generate FSD structures with single commands.",
   "type": "module",
   "bin": {
@@ -12,7 +12,7 @@
     "README.md"
   ],
   "scripts": {
-    "test": "node bin/cli.js test-project --template react"
+    "test": "node bin/cli.js app test-project --template react"
   },
   "keywords": [
     "cli",
@@ -20,7 +20,11 @@
     "feature-sliced-design",
     "react",
     "vite",
-    "template"
+    "template",
+    "typescript",
+    "javascript",
+    "scaffold",
+    "generator"
   ],
   "author": "t1ep1l0t",
   "license": "MIT",

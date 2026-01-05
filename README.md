@@ -14,9 +14,9 @@
 
 ## 📖 About
 
-**@t1ep1l0t/create-fsd** is a powerful CLI tool that helps you quickly bootstrap production-ready React applications following the [Feature-Sliced Design (FSD)](https://feature-sliced.design/) architectural methodology. Not only can you create fully configured projects in seconds, but you can also generate FSD-compliant structures for features, entities, widgets, and pages on-demand!
+**@t1ep1l0t/create-fsd** is a powerful CLI tool that helps you quickly bootstrap production-ready frontend applications following the [Feature-Sliced Design (FSD)](https://feature-sliced.design/) architectural methodology. Create fully configured projects with **JavaScript** or **TypeScript** in seconds, and generate FSD-compliant structures for features, entities, widgets, and pages on-demand!
 
-> 🎯 Currently supports **React** template. More frameworks (Vue, Next, Nuxt, Svelte) coming soon!
+> 🎯 **Supports both JavaScript and TypeScript** with automatic project type detection
 
 ---
 
@@ -25,15 +25,20 @@
 ### 🏗️ **Architecture**
 - **Feature-Sliced Design (FSD)** - Scalable and maintainable project structure
 - **FSD Structure Generator** - Quickly generate features, entities, widgets, and pages
+- **Auto-detection** - Automatically detects TypeScript/JavaScript and creates appropriate files
 - Clear separation of concerns across layers
 - Ready-to-use folder structure with automated scaffolding
 
-### ⚡ **Modern Stack**
+### ⚡ **Language Support**
+- **JavaScript & TypeScript** - Full support for both languages
+- **Smart Detection** - Automatically detects project type when generating structures
+- **Type Safety** - TypeScript templates with proper typing for all libraries
+- **Zero Config** - Works out of the box with optimal settings
+
+### 📦 **Modern Stack** (React Template)
 - **React 18** - Latest React with concurrent features
 - **Vite** - Lightning-fast build tool and dev server
 - **TailwindCSS v4** - Utility-first CSS framework
-
-### 📦 **Pre-configured Libraries**
 - **React Router DOM** - Declarative routing
 - **Zustand** - Lightweight state management
 - **Axios** - HTTP client with interceptors configured
@@ -44,44 +49,47 @@
 ### 🎨 **Developer Experience**
 - Path aliases configured (`@app`, `@pages`, `@widgets`, `@features`, `@entities`, `@shared`)
 - Example code demonstrating best practices
+- Full TypeScript support with type definitions
 - Zero configuration needed - start coding immediately
 
 ---
 
 ## 🚀 Quick Start
 
-### Using npm
+### Create a JavaScript Project
 
 ```bash
-npm create @t1ep1l0t/fsd my-app
+npx @t1ep1l0t/create-fsd app my-app
 cd my-app
 npm run dev
 ```
 
-### Using npx
+### Create a TypeScript Project
 
 ```bash
-npx @t1ep1l0t/create-fsd my-app
+npx @t1ep1l0t/create-fsd app my-app --typescript
 cd my-app
 npm run dev
 ```
 
-### With template option
+### With npm create
 
 ```bash
-npx @t1ep1l0t/create-fsd my-app --template react
+npm create @t1ep1l0t/fsd app my-app
+cd my-app
+npm run dev
 ```
 
 ---
 
-## 🏗️ FSD Structure Generator
+## 🏗️ FSD Architecture Generator
 
-After creating your project, you can use the `fsd` command to quickly generate FSD-compliant directory structures for features, entities, widgets, and pages.
+After creating your project, you can use the `arch` command to quickly generate FSD-compliant directory structures for features, entities, widgets, and pages. The command **automatically detects** whether your project uses TypeScript or JavaScript and creates the appropriate files.
 
 ### Usage
 
 ```bash
-create-fsd fsd [options]
+create-fsd arch [options]
 ```
 
 ### Options
@@ -97,30 +105,47 @@ create-fsd fsd [options]
 
 ### Examples
 
+#### TypeScript Project
 ```bash
-# Create a feature with UI and model segments
-create-fsd fsd -f user -s ui model -i
+# The CLI detects tsconfig.json and creates .ts files automatically
+create-fsd arch -f user-auth -s ui model api -i
 
-# Result:
-# src/features/user/
+# Result in TypeScript project:
+# src/features/user-auth/
 # ├── ui/
-# │   └── index.js
+# │   └── index.ts
+# ├── model/
+# │   └── index.ts
+# ├── api/
+# │   └── index.ts
+# └── index.ts (exports all segments)
+```
+
+#### JavaScript Project
+```bash
+# The CLI detects no tsconfig.json and creates .js files automatically
+create-fsd arch -e product -s model ui -i
+
+# Result in JavaScript project:
+# src/entities/product/
 # ├── model/
 # │   └── index.js
+# ├── ui/
+# │   └── index.js
 # └── index.js (exports all segments)
+```
 
-# Create an entity with API and lib segments
-create-fsd fsd -e product -s api lib -i
-
+#### More Examples
+```bash
 # Create a widget without index files (uses .gitkeep)
-create-fsd fsd -w header -s ui model
+create-fsd arch -w header -s ui model
 
 # Create a page
-create-fsd fsd -p home -s ui api -i
+create-fsd arch -p home -s ui api -i
 
 # Add more segments to existing structure
-create-fsd fsd -f user -s api config -i
-# This will add api/ and config/ folders and update the root index.js
+create-fsd arch -f user-auth -s config types -i
+# This will add new folders and update the root index file
 ```
 
 ### Common Segment Names
@@ -145,7 +170,7 @@ src/
 ├── 📱 app/              # Application initialization layer
 │   ├── providers/       # App providers (Router, i18n, Query Client)
 │   ├── styles/          # Global styles
-│   └── App.jsx          # Root component
+│   └── App.tsx/jsx      # Root component
 │
 ├── 📄 pages/            # Pages layer - route components
 │   ├── home/            # Home page
@@ -163,9 +188,11 @@ src/
 │
 └── 🔧 shared/           # Shared layer - reusable code
     ├── api/             # API client configuration
-    ├── store/           # Zustand stores
+    ├── store/           # State management stores
     └── ui/              # UI kit components
 ```
+
+> **Note:** TypeScript projects include `.tsx`/`.ts` files, while JavaScript projects use `.jsx`/`.js`
 
 ### Layer Responsibilities
 
@@ -198,22 +225,32 @@ The generated project includes working examples for all included libraries:
 
 ## 🛠️ Available Templates
 
-| Template | Status | Description |
-|----------|--------|-------------|
-| **React** | ✅ Available | React 18 + Vite + FSD architecture |
-| **Vue** | 🔜 Coming Soon | Vue 3 + Vite + FSD architecture |
-| **Next.js** | 🔜 Coming Soon | Next.js + FSD architecture |
-| **Nuxt** | 🔜 Coming Soon | Nuxt 3 + FSD architecture |
-| **Svelte** | 🔜 Coming Soon | Svelte + Vite + FSD architecture |
+| Template | Language | Status | Description |
+|----------|----------|--------|-------------|
+| **React** | JS / TS | ✅ Available | React 18 + Vite + FSD architecture |
+| **Vue** | JS / TS | 🔜 Coming Soon | Vue 3 + Vite + FSD architecture |
+| **Next.js** | JS / TS | 🔜 Coming Soon | Next.js + FSD architecture |
+| **Nuxt** | JS / TS | 🔜 Coming Soon | Nuxt 3 + FSD architecture |
+| **Svelte** | JS / TS | 🔜 Coming Soon | Svelte + Vite + FSD architecture |
 
 ---
 
 ## 📋 CLI Commands
 
-### Create Project
+### Main Commands
 
 ```bash
-create-fsd <project-name> [options]
+create-fsd                    # Show help
+create-fsd app <name> [opts]  # Create new project
+create-fsd arch [opts]        # Generate FSD structure
+```
+
+### `create-fsd app` - Create Project
+
+Create a new project from template
+
+```bash
+create-fsd app <project-name> [options]
 ```
 
 #### Options
@@ -221,24 +258,28 @@ create-fsd <project-name> [options]
 | Option | Alias | Description | Default |
 |--------|-------|-------------|---------|
 | `--template <name>` | `-t` | Template to use | `react` |
+| `--typescript` | `-ts` | Use TypeScript instead of JavaScript | `false` |
 
 #### Examples
 
 ```bash
-# Create project with React template (default)
-npx @t1ep1l0t/create-fsd my-app
+# Create JavaScript project (default)
+npx @t1ep1l0t/create-fsd app my-app
 
-# Explicitly specify template
-npx @t1ep1l0t/create-fsd my-app --template react
+# Create TypeScript project
+npx @t1ep1l0t/create-fsd app my-app --typescript
+npx @t1ep1l0t/create-fsd app my-app -ts
 
-# Short form
-npx @t1ep1l0t/create-fsd my-app -t react
+# Specify template explicitly
+npx @t1ep1l0t/create-fsd app my-app -t react -ts
 ```
 
-### Generate FSD Structure
+### `create-fsd arch` - Generate FSD Structure
+
+Generate FSD-compliant architecture structures. Automatically detects project type (TS/JS) and creates appropriate files.
 
 ```bash
-create-fsd fsd [options]
+create-fsd arch [options]
 ```
 
 #### Options
@@ -256,24 +297,39 @@ create-fsd fsd [options]
 
 ```bash
 # Create feature with index files
-create-fsd fsd -f authentication -s ui model api -i
+create-fsd arch -f authentication -s ui model api -i
 
 # Create entity without index files
-create-fsd fsd -e user -s model api
+create-fsd arch -e user -s model api
 
 # Create widget
-create-fsd fsd -w sidebar -s ui lib -i
+create-fsd arch -w sidebar -s ui lib -i
 
 # Create page
-create-fsd fsd -p dashboard -s ui model -i
+create-fsd arch -p dashboard -s ui model -i
+
+# Add more segments to existing structure
+create-fsd arch -f authentication -s config types -i
 ```
+
+#### Auto-Detection
+
+The `arch` command automatically detects your project type:
+
+- **TypeScript projects** (with `tsconfig.json`) → creates `.ts`/`.tsx` files
+- **JavaScript projects** (without `tsconfig.json`) → creates `.js`/`.jsx` files
 
 ---
 
 ## 🎓 Learn More
 
+### Core Concepts
 - [Feature-Sliced Design Documentation](https://feature-sliced.design/)
+- [FSD Best Practices](https://feature-sliced.design/docs/guides)
+
+### Technologies (React Template)
 - [React Documentation](https://react.dev/)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
 - [Vite Documentation](https://vitejs.dev/)
 - [TailwindCSS Documentation](https://tailwindcss.com/)
 
