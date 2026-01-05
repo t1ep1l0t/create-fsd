@@ -1,7 +1,7 @@
 {
   "name": "@t1ep1l0t/create-fsd",
   "version": "2.0.1",
-  "description": "CLI tool to create React projects with FSD architecture",
+  "description": "CLI for Feature-Sliced Design architecture. Create production-ready projects from framework templates and generate FSD structures with single commands.",
   "type": "module",
   "bin": {
     "create-fsd": "./bin/cli.js"
