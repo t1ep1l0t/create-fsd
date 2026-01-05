@@ -24,7 +24,10 @@
   ],
   "author": "t1ep1l0t",
   "license": "MIT",
-  "engines": {
+	"repository": {
+		"url": "https://github.com/t1ep1l0t/create-fsd"
+	},
+	"engines": {
     "node": ">=16.0.0"
   },
   "dependencies": {
